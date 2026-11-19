@@ -51,7 +51,7 @@ def retrieve_content(question, embed_model, chunks, index, num_chunks=3):
   sim_scores, vec_indices = index.search(query_embed, min(num_chunks, len(chunks)))
   background = ""
   for i in vec_indices[0]:
-    if i is != -1:
+    if i != -1:
     background += chunks[i] + "\n\n"
   return background 
 #ask:
@@ -64,7 +64,15 @@ def ask_rag (question, embed_model,chunks, index, api_key, num_chunks, model_nam
   Answer user question using ONLY doucument background below.
   Do not invent or assume facts'
   if information not available, simply say information Missing
-  doucument background :""" + background
+  doucument background :"""+ background + "user question " + question + "Answer:"
+  client = Groq(api_key = key)
+  response = client.chat.completions.create(
+    model = model_name,
+    messages = [ { "role" : "user",
+                   "content" : prompt}],
+                   temprature = 0.3,
+  )
+  return response.choices[0].message.content
   
   
        
