@@ -17,28 +17,28 @@ def create_chunks(full_text,chunksize = 500,overalp=100):
     start = 0
     while start<len(full_text):     #0<1000     400<1000
       end = start + chunksize
-      chunk = full-text[start:end]
+      chunk = full_text[start:end]
       if chunk.strip():
-        chunk.append(chunk)
+        chunks.append(chunk)
       start = end - overlap
     return chunks 
   # Embedding:
-def build_vector (chunks, model_name = "all-MiniLM-L6-v2"):
+def build_vectors (chunks, model_name = "all-MiniLM-L6-v2"):
   if not chunks:
     raise ValueError("Cannot apply embedding without chunks")
   embed_model = SentenceTransformer(model_name)
   embed_vectors = embed_model.encode(chunks,convert_to_numpy = True)
   faiss.normalize_L2(embed_vectors)
   index = faiss.IndexFlatIP(embed_vectors.shape[1])
-  
+  index.add(embed_vectors)
   return  index, embed_model
 
 # Call loadpdf,chunk, embedding
 def load_base (pdf_path="01_College_Information.pdf"):
   full_text = load_pdf(pdf_path)
   chunks = create_chunks(full_text)
-  embed_model,index = build_vector(chunks)
-  return embed_model, chunks,index
+  embed_model,index = build_vectors(chunks)
+  return index, embed_model, chunks
 
 #retrieve
 def retrieve_content(question, embed_model, chunks, index, num_chunks=3):
