@@ -3,7 +3,7 @@ from RAG_engine import load_base, ask_rag
 st.set_page_config(page_title = "SIET_Chatbot", layout = "centered")
 st.title("Shridevi Institute of Engineering and Technology - Chatbot")
 st.caption("Ask anythimg about the college information...")
-st.caption("created by DARSHAN")
+st.caption("Created by AMEER KHAN")
 
 mykey = st.secrets["GROQ_API_KEY"]
 
